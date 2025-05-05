@@ -30,9 +30,9 @@ def download_dir(local_path, s3_prefix):
                 s3.download_file(bucket_name, s3_key, local_file)
 
 # Streamlit app
-st.title("Machine Learning Model Deployment at the Server!!!")
+st.title("RIDO ML Model Deployment at the Server!!!")
 
-button = st.button("Download Model")
+button = st.button("Download RIDO/ML-Model")
 if button:
     with st.spinner("Downloading... Please wait!"):
         download_dir(local_path, s3_prefix)
