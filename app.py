@@ -6,16 +6,19 @@ import os
 import torch
 from transformers import pipeline
 
+# Downloading the model from S3
 import boto3
-bucket_name = "mlops-rido"
 
+bucket_name = "mlops-rido"
 local_path = 'tinybert-sentiment-analysis'
 s3_prefix = 'ml-models/tinybert-sentiment-analysis/'
 
 s3 = boto3.client('s3')
+
 def download_dir(local_path, s3_prefix):
     os.makedirs(local_path, exist_ok=True)
     paginator = s3.get_paginator('list_objects_v2')
+
     for result in paginator.paginate(Bucket=bucket_name, Prefix=s3_prefix):
         if 'Contents' in result:
             for key in result['Contents']:
@@ -26,7 +29,7 @@ def download_dir(local_path, s3_prefix):
 
                 s3.download_file(bucket_name, s3_key, local_file)
 
-
+# Streamlit app
 st.title("Machine Learning Model Deployment at the Server!!!")
 
 button = st.button("Download Model")
@@ -40,6 +43,7 @@ predict = st.button("Predict")
 
 device = torch.device('cuda') if torch.cuda.is_available() else torch.device('cpu')
 classifier = pipeline('text-classification', model='tinybert-sentiment-analysis', device=device)
+
 if predict:
     with st.spinner("Predicting..."):
         output = classifier(text)
